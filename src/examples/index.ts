@@ -9,6 +9,7 @@ import { default as nodeViewExample } from './nodeView';
 import { default as schemaExample } from './schema';
 import { default as pluginViewExample } from './pluginView';
 import { default as schema2Example } from './schema2';
+import { default as inputRulesExample } from './inputRules';
 
 export const examples = [
   basicExample,
@@ -20,4 +21,5 @@ export const examples = [
   inlineExample,
   widgetExample,
   nodeExample,
+  inputRulesExample,
 ];
