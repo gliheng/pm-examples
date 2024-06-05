@@ -15,6 +15,7 @@
     "prosemirror-commands": "^1.5.2",
     "prosemirror-example-setup": "^1.2.2",
     "prosemirror-history": "^1.4.0",
+    "prosemirror-inputrules": "^1.4.0",
     "prosemirror-keymap": "^1.2.2",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.21.0",

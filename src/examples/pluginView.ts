@@ -93,5 +93,5 @@ export default {
     }
   `,
   title: 'Plugin view example',
-  desc: 'Use pluginview to add non-doc ui to the dom',
+  desc: 'Use pluginview to add editor ui to the dom',
 }
