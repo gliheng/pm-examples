@@ -40,5 +40,5 @@ function setup(el: HTMLElement) {
 export default {
   setup,
   title: 'Input rules example',
-  desc: 'Use inputrules plugin to trigger command when user types something',
+  desc: 'Use inputrules plugin to trigger command when user types something. By default, 500 chars before the cursor in that text node will be matched with provided regular expression',
 }

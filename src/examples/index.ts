@@ -7,7 +7,8 @@ import {
 import { default as exampleExample } from './example';
 import { default as nodeViewExample } from './nodeView';
 import { default as schemaExample } from './schema';
-import { default as pluginViewExample } from './pluginView';
+import { default as pluginExample } from './plugin';
+import { default as plugin2Example } from './plugin2';
 import { default as schema2Example } from './schema2';
 import { default as inputRulesExample } from './inputRules';
 
@@ -17,7 +18,8 @@ export const examples = [
   schemaExample,
   schema2Example,
   nodeViewExample,
-  pluginViewExample,
+  pluginExample,
+  plugin2Example,
   inlineExample,
   widgetExample,
   nodeExample,
