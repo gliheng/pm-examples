@@ -1,3 +1,4 @@
+import { examples } from './examples';
 import { LitElement, html, css } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
 import { ref, createRef } from 'lit/directives/ref.js';
@@ -7,10 +8,11 @@ import '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import '@shoelace-style/shoelace/dist/themes/dark.css';
 import { getBasePath, setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-import { examples } from './examples';
 import "prosemirror-example-setup/style/style.css";
 import { EditorView } from 'prosemirror-view';
 import pmStyle from "prosemirror-view/style/prosemirror.css?raw";
+import { Router } from './router';
+import { kebabCase } from 'lodash-es';
 
 setBasePath('/node_modules/@shoelace-style/shoelace/dist');
 
@@ -56,11 +58,28 @@ class LitExample extends LitElement {
 
 @customElement('pm-examples')
 export class ProseMirrorExamples extends LitElement {
-  @state()
-  current = 0
+  router = new Router(this, {
+    routes: [
+      {
+        name: 'home',
+        path: '/',
+        redirect: () => ({ name: kebabCase(examples[0].title) }),
+      },
+      ...examples.map(e => {
+        const name = kebabCase(e.title);
+        return {
+          name,
+          path: '/' + name,
+          render: () => html`${keyed(name, html`<lit-example .example=${e}></lit-example>`)}`,
+        }
+      })
+    ],
+    mode: 'hash',
+  });
 
   onSelect(evt: CustomEvent) {
-    this.current = parseInt(evt.detail.item.value);
+    const e = examples[parseInt(evt.detail.item.value)];
+    location.hash = '/' + kebabCase(e.title);
   }
 
   render() {
@@ -75,7 +94,7 @@ export class ProseMirrorExamples extends LitElement {
           })}
         </sl-menu>
       </sl-dropdown>
-      ${keyed(this.current, html`<lit-example :key="${this.current}" .example=${examples[this.current]}></lit-example>`)}
+      ${this.router.outlet()}
     `;
   }
 
