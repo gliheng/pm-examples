@@ -25,14 +25,20 @@ export class Router implements ReactiveController {
   }
 
   get mode() {
-    const { mode = 'hash' } = this.config;
+    const { mode = 'history' } = this.config;
     return mode;
   }
 
-  hostConnected() {
+  get changeEvent() {
+    let evt = 'popstate';
     if (this.mode == 'hash') {
-      window.addEventListener('hashchange', this.onHashChange);
+      evt = 'hashchange';
     }
+    return evt;
+  }
+
+  hostConnected() {
+    window.addEventListener(this.changeEvent, this.onChange);
     const info = this.resolveRoute();
     if (info) {
       this.startRoute(info);
@@ -42,12 +48,10 @@ export class Router implements ReactiveController {
   }
 
   hostDisconnected() {
-    if (this.mode == 'hash') {
-      window.removeEventListener('hashchange', this.onHashChange);
-    }
+    window.removeEventListener(this.changeEvent, this.onChange);
   }
 
-  onHashChange = () => {
+  onChange = () => {
     const info = this.resolveRoute();
     if (info) {
       this.startRoute(info);
@@ -61,7 +65,16 @@ export class Router implements ReactiveController {
 
       // });
     };
-    const path = location.hash.substring(1) || '/';
+    let path;
+    if (this.mode == 'hash') {
+      path = location.hash.substring(1) || '/';
+    } else {
+      path = location.pathname;
+      const { base } = this.config;
+      if (base && path.startsWith(path)) {
+        path = path.substring(base.length);
+      }
+    }
     for (const route of this.config.routes) {
       const match = matchPath(route.path, path);
       if (match) return { route, ...match };
@@ -71,7 +84,7 @@ export class Router implements ReactiveController {
   startRoute({ route }: { route: RouteConfig; params: any; query: any }) {
     if (route.redirect) {
       const r = route.redirect();
-      this.gotoRoute(r)
+      this.go(r)
     } else {
       this.currentRoute = route;
       this.host.requestUpdate();
@@ -80,12 +93,13 @@ export class Router implements ReactiveController {
 
   currentRoute?: RouteConfig;
 
-  gotoRoute(route: Route) {
+  go(route: Route) {
+    let path;
     if (typeof route == 'string') {
-      location.hash = route;
+      path = route;
     } else if (route.name) {
       const r = this.findRouteWithName(route.name!);
-      location.hash = this.fillParams(r.path, route);
+      path = this.fillParams(r.path, route);
       // if (r) {
       //   this.startRoute({
       //     route: r,
@@ -95,6 +109,12 @@ export class Router implements ReactiveController {
       // } else {
       //   console.error('Cannot find route for', route);
       // }
+    }
+    if (this.mode == 'hash') {
+      location.hash = path;
+    } else {
+      window.history.pushState(null, '', path);
+      this.onChange();
     }
   }
 

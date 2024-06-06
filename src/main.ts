@@ -74,12 +74,11 @@ export class ProseMirrorExamples extends LitElement {
         }
       })
     ],
-    mode: 'hash',
   });
 
   onSelect(evt: CustomEvent) {
     const e = examples[parseInt(evt.detail.item.value)];
-    location.hash = '/' + kebabCase(e.title);
+    this.router.go('/' + kebabCase(e.title));
   }
 
   render() {
