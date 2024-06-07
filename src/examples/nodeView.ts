@@ -38,8 +38,7 @@ class Notice extends LitElement {
     const { view } = this.pm;
     const { state } = view;
     if (label) {
-      let doc = state.apply(state.tr.setNodeAttribute(this.pm.getPos(), 'label', label))
-      view.updateState(doc);
+      view.dispatch(state.tr.setNodeAttribute(this.pm.getPos(), 'label', label));
     }
   }
 

@@ -15,7 +15,13 @@ function setup(el: HTMLElement) {
     ]
   });
 
-  let view = new EditorView(el, {state});
+  let view = new EditorView(el, {
+    state,
+    dispatchTransaction(tr) {
+      let newState = view.state.apply(tr);
+      view.updateState(newState);
+    },
+  });
   return view;
 }
 

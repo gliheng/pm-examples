@@ -10,6 +10,7 @@ import { default as schemaParseDOMExample } from './schema-parse-dom';
 import { default as pluginViewExample } from './plugin-view';
 import { default as pluginStateExample } from './plugin-state';
 import { default as inputRulesExample } from './inputRules';
+import { default as taskListExample } from './task-list';
 
 export const examples = [
   basicExample,
@@ -24,4 +25,5 @@ export const examples = [
   nodeExample,
   placeholderExample,
   inputRulesExample,
+  taskListExample,
 ];
