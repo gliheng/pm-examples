@@ -4,6 +4,7 @@ import {
   nodeExample,
   widgetExample,
 } from './decorations';
+import { default as deco2Example } from './decoration2';
 import { default as exampleExample } from './example';
 import { default as nodeViewExample } from './nodeView';
 import { default as schemaExample } from './schema';
@@ -23,5 +24,6 @@ export const examples = [
   inlineExample,
   widgetExample,
   nodeExample,
+  deco2Example,
   inputRulesExample,
 ];
