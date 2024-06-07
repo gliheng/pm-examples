@@ -6,7 +6,7 @@ import { Decoration, DecorationSet, EditorView } from "prosemirror-view";
 import { schema } from 'prosemirror-schema-basic'
 
 
-const decoWidget = new Plugin({
+const plugin = new Plugin({
   props: {
     decorations(state) {
       if (state.selection.empty) {
@@ -27,35 +27,7 @@ const decoWidget = new Plugin({
   }
 })
 
-const decoInline = new Plugin({
-  props: {
-    decorations(state) {
-      if (state.selection.empty) {
-        return DecorationSet.empty;
-      }
-      const { from , to } = state.selection
-      const decoration = Decoration.inline(from, to, {
-        style: 'color: red'
-      });
-      return DecorationSet.create(state.doc, [decoration]);
-    }
-  }
-})
-
-const decoNode = new Plugin({
-  props: {
-    decorations(state) {
-      const selection = state.selection;
-      const resolved = state.doc.resolve(selection.from);
-      const decoration = Decoration.node(resolved.before(), resolved.after(), {
-        class: 'current-element'
-      });
-      return DecorationSet.create(state.doc, [decoration]);
-    }
-  }
-})
-
-function setup(plugin: Plugin, el: HTMLElement) {
+function setup(el: HTMLElement) {
   let state = EditorState.create({
     schema,
     plugins: [
@@ -69,8 +41,8 @@ function setup(plugin: Plugin, el: HTMLElement) {
   return view;
 }
 
-export const widgetExample = {
-  setup: setup.bind(this, decoWidget),
+export default {
+  setup: setup,
   style: `
     .flag {
       display: inline-block;
@@ -91,21 +63,4 @@ export const widgetExample = {
   `,
   title: 'Widget decoration',
   desc: 'Use widget decoration to add dom nodes to mark the current selection',
-}
-
-export const inlineExample = {
-  setup: setup.bind(this, decoInline),
-  title: 'Inline decoration',
-  desc: 'Use inline decoration to paint the current selected text red',
-}
-
-export const nodeExample = {
-  setup: setup.bind(this, decoNode),
-  style: `
-    .current-element {
-      color: red;
-    }
-  `,
-  title: 'Node decoration',
-  desc: 'Use node decoration to paint the current selected dom node red',
 }
