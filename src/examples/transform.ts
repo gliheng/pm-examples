@@ -36,6 +36,24 @@ function setup(el: HTMLElement) {
                 }
               },
             }),
+            new MenuItem({
+              title: "Set heading level",
+              label: "Set heading level",
+              run: (state: EditorState, dispatch) => {
+                const tr = state.tr;
+                const range = state.selection.$from.blockRange();
+                const ans = prompt('Give a heading level');
+                if (range && ans) {
+                  const n = parseInt(ans);
+                  if (!isNaN(n)) {
+                    tr.setNodeAttribute(range.start, 'level', n);
+                    dispatch(tr);
+                    return true;
+                  }
+                }
+                return false;
+              },
+            }),
           ],
           [
             new MenuItem({
