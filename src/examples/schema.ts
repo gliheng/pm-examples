@@ -124,6 +124,6 @@ function setup(el: HTMLElement) {
 export default {
   setup,
   style: `${menuStyle}`,
-  title: 'Schema example',
+  title: 'Custom schema with webcompnent',
   desc: 'A custom schema showing usage of nodes and marks',
 }

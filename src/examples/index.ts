@@ -11,6 +11,7 @@ import { default as pluginViewExample } from './plugin-view';
 import { default as pluginStateExample } from './plugin-state';
 import { default as inputRulesExample } from './inputRules';
 import { default as taskListExample } from './task-list';
+import { default as transformExample } from './transform';
 
 export const examples = [
   basicExample,
@@ -26,4 +27,5 @@ export const examples = [
   placeholderExample,
   inputRulesExample,
   taskListExample,
+  transformExample,
 ];

@@ -107,6 +107,6 @@ export default {
       }
     }
   `,
-  title: 'task-list example',
-  desc: 'Use prosemirror-example-setup package for a quick setup',
+  title: 'Task list example',
+  desc: 'A task list schema type',
 }

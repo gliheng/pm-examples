@@ -107,6 +107,6 @@ export default {
       color: white;
     }
   `,
-  title: 'Schema example',
+  title: 'Custom Schema with parseDOM',
   desc: 'Use parseDOM and toDOM to customize dom',
 }
