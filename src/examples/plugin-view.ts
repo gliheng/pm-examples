@@ -33,7 +33,7 @@ class Panel {
     let top = start.top;
     let width = Math.max(start.right, end.right) - Math.min(start.left, end.left);
     let height = end.bottom - start.top;
-    this.el.innerHTML = `${to - from} chars selected`;
+    this.el.innerHTML = `Selection from ${from} to ${to}`;
     computePosition({
       getBoundingClientRect() {
         return {

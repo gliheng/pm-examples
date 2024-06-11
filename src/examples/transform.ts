@@ -1,13 +1,13 @@
-import { wrapIn } from 'prosemirror-commands';
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { schema as baseSchema } from 'prosemirror-schema-basic'
-import { addListNodes, listItem } from 'prosemirror-schema-list';
+import { addListNodes, sinkListItem } from 'prosemirror-schema-list';
 import { exampleSetup } from 'prosemirror-example-setup';
 import emStyle from "prosemirror-example-setup/style/style.css?raw";
 import menuStyle from "prosemirror-menu/style/menu.css?raw";
 import { Schema } from "prosemirror-model";
 import { MenuItem } from "prosemirror-menu";
+import { liftTarget } from 'prosemirror-transform';
 
 
 const schema = new Schema({
@@ -57,8 +57,22 @@ function setup(el: HTMLElement) {
           ],
           [
             new MenuItem({
-              title: "Wrap list",
-              label: "Wrap list",
+              title: "Join with previous paragraph",
+              label: "Join",
+              run: (state: EditorState, dispatch) => {
+                const tr = state.tr;
+                const range = state.selection.$from.blockRange();
+                if (range) {
+                  dispatch(tr.join(range.start));
+                  return true;
+                }
+              },
+            }),
+          ],
+          [
+            new MenuItem({
+              title: "Wrap in a list",
+              label: "Wrap",
               run: (state: EditorState, dispatch) => {
                 const tr = state.tr;
                 const range = state.selection.$from.blockRange();
@@ -76,11 +90,40 @@ function setup(el: HTMLElement) {
                 }
               },
             }),
-          ],
-          [
+            new MenuItem({
+              title: "Lift to parent list",
+              label: "Lift",
+              run: (state: EditorState, dispatch) => {
+                const tr = state.tr;
+                const range = state.selection.$from.blockRange();
+                if (range) {
+                  const tar = liftTarget(range);
+                  if (typeof tar == 'number') {
+                    dispatch(tr.lift(range, tar));
+                    return true;
+                  }
+                }
+              },
+            }),
+            new MenuItem({
+              title: "Sink list item",
+              label: "Sink",
+              run: (state, dispatch) => sinkListItem(schema.nodes.list_item)(state, dispatch),
+              // run: (state: EditorState, dispatch) => {
+              //   const tr = state.tr;
+              //   const range = state.selection.$from.blockRange();
+              //   if (range) {
+              //     const tar = liftTarget(range);
+              //     if (typeof tar == 'number') {
+              //       dispatch(tr.lift(range, tar));
+              //       return true;
+              //     }
+              //   }
+              // },
+            }),
             new MenuItem({
               title: "Split list",
-              label: "Split list",
+              label: "Split",
               run: (state: EditorState, dispatch) => {
                 const tr = state.tr;
                 dispatch(tr.split(state.selection.$from.pos, 2).scrollIntoView());
@@ -104,5 +147,5 @@ export default {
     ${menuStyle}
   `,
   title: 'Transform example',
-  desc: 'Use state.tr for transform',
+  desc: 'Use state.tr to transform document',
 }
