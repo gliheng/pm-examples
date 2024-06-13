@@ -1,10 +1,10 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, render } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { schema } from 'prosemirror-schema-basic'
 import { MenuItem, menuBar } from 'prosemirror-menu';
-import { NodeSpec, NodeType, Schema } from "prosemirror-model";
+import { Node, NodeSpec, NodeType, Schema } from "prosemirror-model";
 import emStyle from "prosemirror-example-setup/style/style.css?raw";
 import menuStyle from "prosemirror-menu/style/menu.css?raw";
 import { baseKeymap, setBlockType } from 'prosemirror-commands';
@@ -12,15 +12,42 @@ import { history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 
 class NoticeView {
-  constructor(node, view, getPos) {
-    const el = document.createElement("pm-notice")
-    el.pm = {
-      node, view, getPos,
-    };
-    this.dom = this.contentDOM = el;
+  dom: HTMLElement;
+  contentDOM: HTMLElement;
+
+  constructor(node: Node, private view: EditorView, private getPos: () => number | undefined) {
+    const el = document.createElement("div")
+    el.classList.add('notice');
+    this.dom = el;
+    this.render(node);
+    this.contentDOM = el.querySelector('p')!;
+  }
+
+  askLabel = () => {
+    const label = prompt('Give a label for the notice!');
+    const { state } = this.view;
+    if (label) {
+      this.view.dispatch(state.tr.setNodeAttribute(this.getPos()!, 'label', label));
+    }
+  }
+
+  render(node: Node) {
+    const { label } = node.attrs;
+    render(html`
+      <h1 @click=${this.askLabel}>${label}</h1>
+      <p></p>
+    `, this.dom);
+  }
+
+  update(node: Node) {
+    this.render(node);
+    return true;
   }
 }
 
+/* Webcomponent with slots in contenteditable can hardly target in chrome
+ * so this is not used
+ */
 @customElement('pm-notice')
 class Notice extends LitElement {
   @property({ attribute: false })
@@ -132,6 +159,21 @@ export default {
   style: `
     ${emStyle}
     ${menuStyle}
+    .notice {
+      display: flex;
+      align-items: center;
+      margin: 1em 0;
+    }
+    .notice > h1 {
+      background: gray;
+      color: white;
+      font-size: 16px;
+      margin: 0;
+      margin-right: 4px;
+    }
+    .notice > p {
+      margin: 0;
+    }
   `,
   title: 'Node view example',
   desc: 'Use nodeView to listen to events to custom nodes',
