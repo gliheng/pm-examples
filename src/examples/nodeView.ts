@@ -48,59 +48,59 @@ class NoticeView {
 /* Webcomponent with slots in contenteditable can hardly target in chrome
  * so this is not used
  */
-@customElement('pm-notice')
-class Notice extends LitElement {
-  @property({ attribute: false })
-  pm!: {
-    node: NodeType;
-    view: EditorView;
-    getPos: any;
-  }
+// @customElement('pm-notice')
+// class Notice extends LitElement {
+//   @property({ attribute: false })
+//   pm!: {
+//     node: NodeType;
+//     view: EditorView;
+//     getPos: any;
+//   }
 
-  @property()
-  label = ''
+//   @property()
+//   label = ''
 
-  askLabel() {
-    const label = prompt('Give a label for the notice!');
-    const { view } = this.pm;
-    const { state } = view;
-    if (label) {
-      view.dispatch(state.tr.setNodeAttribute(this.pm.getPos(), 'label', label));
-    }
-  }
+//   askLabel() {
+//     const label = prompt('Give a label for the notice!');
+//     const { view } = this.pm;
+//     const { state } = view;
+//     if (label) {
+//       view.dispatch(state.tr.setNodeAttribute(this.pm.getPos(), 'label', label));
+//     }
+//   }
 
-  render() {
-    const { label } = this.pm.node.attrs;
-    return html`
-      <div class="notice">
-        <h1 @click=${this.askLabel}>${label}</h1>
-        <p><slot></slot></p>
-      </div>
-    `;
-  }
+//   render() {
+//     const { label } = this.pm.node.attrs;
+//     return html`
+//       <div class="notice">
+//         <h1 @click=${this.askLabel}>${label}</h1>
+//         <p><slot></slot></p>
+//       </div>
+//     `;
+//   }
 
-  static styles = css`
-    :host {
-      white-space: initial;
-      display: block;
-    }
-    .notice {
-      display: flex;
-      align-items: center;
-      margin: 1em 0;
-    }
-    .notice > h1 {
-      background: gray;
-      color: white;
-      font-size: 16px;
-      margin: 0;
-      margin-right: 4px;
-    }
-    .notice > p {
-      margin: 0;
-    }
-  `;
-}
+//   static styles = css`
+//     :host {
+//       white-space: initial;
+//       display: block;
+//     }
+//     .notice {
+//       display: flex;
+//       align-items: center;
+//       margin: 1em 0;
+//     }
+//     .notice > h1 {
+//       background: gray;
+//       color: white;
+//       font-size: 16px;
+//       margin: 0;
+//       margin-right: 4px;
+//     }
+//     .notice > p {
+//       margin: 0;
+//     }
+//   `;
+// }
 
 function setup(el: HTMLElement) {
   const noticeSpec: NodeSpec = {

@@ -5,6 +5,7 @@ import { baseKeymap, setBlockType } from "prosemirror-commands";
 import { EditorView } from "prosemirror-view";
 import { schema } from 'prosemirror-schema-basic';
 
+
 function setup(el: HTMLElement) {
   let state = EditorState.create({
     schema,

@@ -3,49 +3,47 @@ import { keymap } from "prosemirror-keymap";
 import { EditorState, Transaction } from "prosemirror-state";
 import { baseKeymap } from "prosemirror-commands";
 import { EditorView } from "prosemirror-view";
-import { nodes, marks } from 'prosemirror-schema-basic';
+import { schema } from 'prosemirror-schema-basic';
 import { Schema, NodeSpec } from "prosemirror-model";
 import { MenuItem, menuBar, wrapItem } from "prosemirror-menu";
 import menuStyle from "prosemirror-menu/style/menu.css?raw";
 
 const mySchema = new Schema({
-  nodes: {
-    ...nodes,
-    note: {
-      group: 'block',
-      content: 'inline+',
+  nodes: schema.spec.nodes
+  .addToEnd('note', {
+    group: 'block',
+    content: 'inline+',
 
-      attrs: {
-        type: {
-          default: 'text',
-        },
+    attrs: {
+      type: {
+        default: 'text',
       },
-      toDOM(node) {
-        return ['div', { class: 'note', 'data-type': node.attrs.type }, 0];
-      },
-      parseDOM: [{tag: 'div.note', getAttrs(node) {
-        return { type: node.dataset.type };
-      }}]
-    } as NodeSpec,
-    fancyNote: {
-      group: 'block',
-      content: 'inline+',
+    },
+    toDOM(node) {
+      return ['div', { class: 'note', 'data-type': node.attrs.type }, 0];
+    },
+    parseDOM: [{tag: 'div.note', getAttrs(node) {
+      return { type: node.dataset.type };
+    }}]
+  })
+  .addToEnd('fancyNote', {
+    group: 'block',
+    content: 'inline+',
 
-      attrs: {
-        type: {
-          default: 'text',
-        },
+    attrs: {
+      type: {
+        default: 'text',
       },
-      toDOM(node) {
-        return ['div', { class: 'note', 'data-type': node.attrs.type, 'data-fancy': true }, 0];
-      },
-      parseDOM: [{tag: 'div.note', getAttrs(node) {
-        if (!node.hasAttribute('data-fancy')) return false;
-        return { type: node.dataset.type };
-      }}]
-    } as NodeSpec,
-  },
-  marks,
+    },
+    toDOM(node) {
+      return ['div', { class: 'note', 'data-type': node.attrs.type, 'data-fancy': true }, 0];
+    },
+    parseDOM: [{tag: 'div.note', getAttrs(node) {
+      if (!node.hasAttribute('data-fancy')) return false;
+      return { type: node.dataset.type };
+    }}]
+  }),
+  marks: schema.spec.marks,
 });
 
 function setup(el: HTMLElement) {
@@ -107,6 +105,6 @@ export default {
       color: white;
     }
   `,
-  title: 'Custom Schema with parseDOM',
+  title: 'Schema with custom nodes',
   desc: 'Use parseDOM and toDOM to customize dom',
 }
