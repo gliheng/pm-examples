@@ -148,6 +148,9 @@ function setup(el: HTMLElement) {
         return {
           dom: el,
           update(node) {
+            if (node.type != schema.nodes.image) {
+              return false;
+            }
             el.pm.node = node;
             el.requestUpdate();
             return true;
