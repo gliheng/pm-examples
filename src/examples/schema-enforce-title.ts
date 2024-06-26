@@ -14,7 +14,7 @@ import { LitElement, html, css } from "lit";
 class TagLine extends LitElement {
   @property({ attribute: false })
   pm!: {
-    node: NodeType;
+    node: Node;
     view: EditorView;
     getPos: any;
   }

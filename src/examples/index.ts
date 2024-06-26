@@ -4,6 +4,7 @@ import { default as nodeExample } from './decoration-node';
 import { default as widgetExample } from './decoration-widget';
 import { default as placeholderExample } from './decoration-placeholder';
 import { default as exampleExample } from './example';
+import { default as imageResizeExample } from './image-resize';
 import { default as nodeViewExample } from './nodeView';
 import { default as schemaExample } from './schema-web-component';
 import { default as schemaWithTitleExample } from './schema-enforce-title';
@@ -18,6 +19,7 @@ import { default as transformExample } from './transform';
 export const examples = [
   basicExample,
   exampleExample,
+  imageResizeExample,
   schemaNodesExample,
   schemaMarksExample,
   schemaWithTitleExample,
