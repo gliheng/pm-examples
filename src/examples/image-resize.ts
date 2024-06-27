@@ -90,7 +90,7 @@ class Image extends LitElement {
 }
 
 const schema = new Schema({
-  nodes: addListNodes(baseSchema.spec.nodes, 'paragraph block*', 'block').append({
+  nodes: baseSchema.spec.nodes.append({
     image: {
       inline: true,
       attrs: {
@@ -116,8 +116,8 @@ function setup(el: HTMLElement) {
         menuContent: [
           [
             new MenuItem({
-              title: "Insert an image",
-              label: "Insert an image",
+              title: "Insert image",
+              label: "Insert image",
               run: (state, dispatch) => {
                 if (dispatch) {
                   const tr = state.tr;
@@ -168,6 +168,6 @@ export default {
     ${emStyle}
     ${menuStyle}
   `,
-  title: 'image resize example',
+  title: 'Image resize example',
   desc: 'Add image resize controls using node views',
 }
