@@ -35,7 +35,6 @@ const syntaxHighlight = new Plugin({
         decorations.push(tokensToDecorartions(inst.getPos(), tokens));
       }
       const deco = flatten(decorations);
-      console.log('deco', deco);
       if (deco.length == 0) {
         return DecorationSet.empty;
       }
