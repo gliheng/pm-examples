@@ -120,6 +120,21 @@ export default {
   style: `
     ${emStyle}
     ${menuStyle}
+    details {
+      background: silver;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    summary {
+      padding-left: 10px;
+      padding-right: 10px;
+      background: #666;
+      color: white;
+    }
+    details > p {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
   `,
   title: 'Accordion example',
   desc: 'Add accordion with subview',
