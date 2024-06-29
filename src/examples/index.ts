@@ -16,6 +16,7 @@ import { default as pluginStateExample } from './plugin-state';
 import { default as inputRulesExample } from './inputRules';
 import { default as taskListExample } from './task-list';
 import { default as transformExample } from './transform';
+import { default as accordionExample } from './accordion';
 
 export const examples = [
   basicExample,
@@ -36,4 +37,5 @@ export const examples = [
   inputRulesExample,
   taskListExample,
   transformExample,
+  accordionExample,
 ];
