@@ -92,13 +92,14 @@ function setup(el: HTMLElement) {
                 if (dispatch) {
                   const tr = state.tr;
                   const range = tr.selection.$from.blockRange();
-                  // if (state.selection.empty) {
-                  //   dispatch(tr.setBlockType(range!.start, range!.end, schema.nodes.accordion));
-                  // } else {
-                  console.log('insert at', range?.end);
+                  if (state.selection.empty) {
+                    tr.replaceRangeWith(range!.startIndex, range!.endIndex, schema.nodes.accordion.createAndFill()!);
+                  } else {
+                    console.log('insert at', range?.end);
                     const node = schema.nodes.accordion.createAndFill();
-                    dispatch(tr.insert(range!.end, node!));
-                  // }
+                    tr.insert(range!.end, node!);
+                  }
+                  dispatch(tr.scrollIntoView());
                 }
                 return true;
               },
