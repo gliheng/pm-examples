@@ -13,6 +13,7 @@ import { EditorView } from 'prosemirror-view';
 import pmStyle from "prosemirror-view/style/prosemirror.css?raw";
 import { Router } from './router';
 import { kebabCase } from 'lodash-es';
+import { SlDrawer } from '@shoelace-style/shoelace';
 
 setBasePath('/node_modules/@shoelace-style/shoelace/dist');
 
@@ -58,6 +59,8 @@ class LitExample extends LitElement {
 
 @customElement('pm-examples')
 export class ProseMirrorExamples extends LitElement {
+  drawer = createRef<SlDrawer>()
+
   router = new Router(this, {
     routes: [
       {
@@ -76,33 +79,61 @@ export class ProseMirrorExamples extends LitElement {
     ],
   });
 
-  onSelect(evt: CustomEvent) {
-    const e = examples[parseInt(evt.detail.item.value)];
-    this.router.go('/' + kebabCase(e.title));
+  onSelect(item: { title: string }) {
+    this.router.go('/' + kebabCase(item.title));
+    this.drawer.value?.hide();
+  }
+
+  onShowDrawer() {
+    this.drawer.value?.show();
   }
 
   render() {
     return html`
-      <sl-dropdown @sl-select=${this.onSelect}>
-        <sl-button slot="trigger">
-          <sl-icon name="list" label="Settings"></sl-icon>
-        </sl-button>
-        <sl-menu>
-          ${repeat(examples, (e, i) => {
-            return html`<sl-menu-item value=${i}>${e.title}</sl-menu-item>`;
-          })}
-        </sl-menu>
-      </sl-dropdown>
+      <sl-button class="nav-btn" @click="${this.onShowDrawer}">
+        <sl-icon name="list" label="Settings"></sl-icon>
+      </sl-button>
+      <sl-drawer
+        ${ref(this.drawer)}
+        label="Menu"
+        placement="end"
+      >
+        <nav>
+        ${repeat(examples, (e, i) => {
+          return html`<div class="nav-item" @click=${this.onSelect.bind(this, e)}>
+            <h1>${e.title}</h1>
+            <p>${e.desc}</p>
+          </div>`;
+        })}
+        </nav>
+      </sl-drawer>
       ${this.router.outlet()}
     `;
   }
 
   static styles = css`
-    sl-dropdown {
+    .nav-btn {
       position: fixed;
       top: 0;
       right: 0;
       z-index: 100;
+    }
+    .nav-item {
+      padding: 10px;
+      cursor: default;
+    }
+    .nav-item:hover {
+      background: var(--sl-color-sky-100);
+      outline: 1px solid var(--sl-color-sky-600);
+    }
+    .nav-item h1 {
+      font-size: var(--sl-font-size-x-large);
+      margin: 0;
+    }
+    .nav-item p {
+      font-size: var(--sl-font-size-medium);
+      color: var(--sl-color-neutral-500);
+      margin: 0;
     }
   `;
 }
