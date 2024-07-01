@@ -2,11 +2,12 @@ import { EditorState, Selection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { schema as baseSchema } from 'prosemirror-schema-basic'
 import { exampleSetup } from 'prosemirror-example-setup';
-import { Schema } from "prosemirror-model";
+import { Fragment, Schema, Slice } from "prosemirror-model";
 import { MenuItem } from "prosemirror-menu";
 import { keymap } from "prosemirror-keymap";
 import emStyle from "prosemirror-example-setup/style/style.css?raw";
 import menuStyle from "prosemirror-menu/style/menu.css?raw";
+import { ReplaceAroundStep } from "prosemirror-transform";
 
 const schema = new Schema({
   nodes: baseSchema.spec.nodes.append({
@@ -63,7 +64,7 @@ function setup(el: HTMLElement) {
           
           return false;
         },
-        'Ctrl-Enter': (state, dispatch) => {
+        'Meta-Enter': (state, dispatch) => {
           const { $from } = state.selection;
           const parent = $from.node(1);
           if (parent.type == schema.nodes.accordion) {
@@ -91,15 +92,13 @@ function setup(el: HTMLElement) {
               run: (state, dispatch) => {
                 if (dispatch) {
                   const tr = state.tr;
-                  const range = tr.selection.$from.blockRange();
-                  if (state.selection.empty) {
-                    tr.replaceRangeWith(range!.startIndex, range!.endIndex, schema.nodes.accordion.createAndFill()!);
-                  } else {
-                    console.log('insert at', range?.end);
-                    const node = schema.nodes.accordion.createAndFill();
-                    tr.insert(range!.end, node!);
-                  }
-                  dispatch(tr.scrollIntoView());
+                  const { $from: { pos: from }, $to: { pos: to }} = state.selection;
+                  tr.doc.nodesBetween(from, to, (node, pos) => {
+                    const from = pos, to = pos + node.nodeSize;
+                    const slice = new Slice(Fragment.from(schema.nodes.accordion.createAndFill()), 0, 0);
+                    tr.step(new ReplaceAroundStep(from, to, from + 1, to - 1, slice, 2, true));
+                    dispatch(tr.scrollIntoView());
+                  });
                 }
                 return true;
               },
