@@ -7,6 +7,7 @@ import { default as exampleExample } from './example';
 import { default as imageResizeExample } from './image-resize';
 import { default as codeBlockExample } from './code-block';
 import { default as nodeViewExample } from './nodeView';
+import { default as markViewExample } from './markView';
 import { default as schemaExample } from './schema-web-component';
 import { default as schemaWithTitleExample } from './schema-enforce-title';
 import { default as schemaNodesExample } from './schema-nodes';
@@ -28,6 +29,7 @@ export const examples = [
   schemaWithTitleExample,
   schemaExample,
   nodeViewExample,
+  markViewExample,
   pluginViewExample,
   pluginStateExample,
   inlineExample,
