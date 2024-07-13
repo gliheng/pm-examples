@@ -11,49 +11,42 @@ import { baseKeymap, toggleMark } from 'prosemirror-commands';
 import { history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 
-class LoveView {
+class NoticeView {
   dom: HTMLElement;
   contentDOM: HTMLElement;
 
-  constructor(mark: Mark, private view: EditorView, private inline: boolean) {
+  constructor(private mark: Mark, private view: EditorView, private inline: boolean) {
     const el = document.createElement("span")
-    el.classList.add('love');
+    el.classList.add('notice');
     this.dom = el;
     this.render(mark);
     this.contentDOM = el.querySelector('.content')!;
   }
 
-  toggleBroken() {
-    console.log('Hi');
-  }
-
   render(mark: Mark) {
-    const { broken } = mark.attrs;
     render(html`
-      <span class="content"></span>
-      <span @click=${this.toggleBroken}>${broken ? '💔' : '❤️'}</span>
+      <span>👉</span><span class="content"></span><span>👈</span>
     `, this.dom);
   }
 
   update(mark: Mark) {
+    this.mark = mark;
     this.render(mark);
     return true;
   }
 }
 
 function setup(el: HTMLElement) {
-  const loveSpec: MarkSpec = {
-    attrs: {
-      broken: { default: false },
-    },
+  const noticeSpec: MarkSpec = {
+    attrs: {},
   }
   
   const mySchema = new Schema({
     nodes: schema.spec.nodes,
-    marks: schema.spec.marks.addToEnd('love', loveSpec),
+    marks: schema.spec.marks.addToEnd('notice', noticeSpec),
   })
   
-  const loveType = mySchema.marks.love;
+  const noticeType = mySchema.marks.notice;
 
   let state = EditorState.create({
     schema: mySchema,
@@ -65,9 +58,9 @@ function setup(el: HTMLElement) {
         content: [
           [
             new MenuItem({
-              title: "Apply love mark",
-              label: "Apply love mark",
-              run: toggleMark(loveType),
+              title: "Apply notice mark",
+              label: "Apply notice mark",
+              run: toggleMark(noticeType),
             }),
           ],
         ]
@@ -78,8 +71,8 @@ function setup(el: HTMLElement) {
   let view = new EditorView(el, {
     state,
     markViews: {
-      love(mark, view, inline) {
-        return new LoveView(mark, view, inline);
+      notice(mark, view, inline) {
+        return new NoticeView(mark, view, inline);
       },
     },
   });
@@ -91,17 +84,17 @@ export default {
   style: `
     ${emStyle}
     ${menuStyle}
-    .love {
+    .notice {
       white-space: normal;
       color: red;
     }
     
-    .love .content {
+    .notice .content {
       background: -webkit-linear-gradient(red, pink);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
   `,
   title: 'Mark view example',
-  desc: 'Use markView to listen to events to custom nodes',
+  desc: 'Use markView to customize mark style. Note that these cannot provide the kind of dynamic behavior that node views can—they just provide custom rendering logic',
 }
